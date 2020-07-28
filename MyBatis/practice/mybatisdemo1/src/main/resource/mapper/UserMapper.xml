@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper">
+    <!--查询操作-->
+    <select id="findAll" resultType="user" >
+        select * from userinfo</select>
+    <!--条件查询操作-->
+    <select id="findId" resultType="user">
+        select * from userinfo where user_id=(#{user_id})
+    </select>
+    <!--添加-->
+    <insert
+            id="saveUser" parameterType="user"
+            useGeneratedKeys="true">
+        insert into userinfo values (null,#{user_name},#{user_age})
+    </insert>
+    <!--修改-->
+    <update id="updateUser" parameterType="user">
+        update userinfo set user_name=(#{user_name}),user_age=(#{user_age}) where user_id=(#{user_id})
+    </update>
+    <!--删除-->
+    <delete id="delUser" parameterType="int">
+        delete from userinfo where user_id=(#{user_id})
+    </delete>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:mvcc="http://www.springframework.org/schema/tool"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
+<!--组件扫描：controller-->
+<context:component-scan base-package="com.sec.Conntroller"/>
+
+    <!--mvc注解驱动-->
+    <mvc:annotation-driven/>
+
+    <!--内部资源视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          id="internalResourceViewResolver">
+        <!-- 前缀 -->
+        <property name="prefix" value="/WEB-INF/pags/" />
+        <!-- 后缀 -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!--静态资源访问权限-->
+    <mvc:default-servlet-handler />
+
+    <!--解决中文乱码-->
+    <mvc:annotation-driven>
+
+        <mvc:message-converters>
+
+            <!-- default StringHttpMessageConverter, solve encoding problem -->
+
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+
+                <constructor-arg value="UTF-8" />
+
+                <property name="writeAcceptCharset" value="false" />
+
+            </bean>
+
+        </mvc:message-converters>
+
+    </mvc:annotation-driven>
+</beans>

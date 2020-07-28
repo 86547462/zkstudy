@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <script src="../../js/jquery-3.4.1.min.js"></script>-->
+    <script type="text/javascript" src="../static/js/jquery-3.4.1.min.js" th:src="@{../static/js/jquery-3.4.1.min.js}"></script>
+    <script>
+        $(function(){
+            $("#btn").click(function () {
+                alert("asd");
+            })
+        })
+    </script>
+</head>
+<body>
+<button id="btn">阿斯顿</button>
+<img src="../static/img/9c00045a6891cbcb29433f4ce13f4f11.png" width="100px">
+成功！ <span th:text="${list}"></span>
+<br>
+遍历
+<!--th:each 修饰在div上，则div层重复出现，若只想p标签遍历，则修饰在p标签上-->
+<div th:each="message : ${list}"> <!-- 遍历整个div-p，不推荐-->
+    <span th:text="${message.user_name}" ></span>
+    <span th:text="${message.user_id}" ></span>
+    <span th:text="${message.user_age}" ></span>
+</div>
+<!--只遍历p，推荐使用-->
+<div>
+    <p th:each="user : ${list}" th:object="${user}">
+        <span th:text="*{user_age}"></span>
+        <span th:text="*{user_id}"></span>
+        <span th:text="*{user_name}"></span>
+    </p>
+</div>
+
+<td th:switch = "${ list != null }" >
+        <div th:case="true" th:text = "${list}" >list有值</div>
+        <div th:case="flase" th:text = "哈哈" >list为空</div>
+</td>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.mapper.DeptMapper">
+
+
+    <resultMap id="DeptMap" type="com.example.blog.pojo.Dept">
+        <id column="id" property="id"/>
+        <result column="dept_name" property="dept_name"/>
+        <!--配置内部role的信息-->
+        <collection property="users"  ofType="com.example.blog.pojo.User">
+            <id column="id" property="id"/>
+            <id column="name" property="name"/>
+            <id column="age" property="age"/>
+            <id column="email" property="email"/>
+        </collection>
+    </resultMap>
+
+    <select id="selAllDpet" resultMap="DeptMap">
+    select dept_name,user.id,name,age,email from user RIGHT JOIN dept on user.dept_id=dept.id where dept_name=#{dept_name}
+    </select>
+</mapper>

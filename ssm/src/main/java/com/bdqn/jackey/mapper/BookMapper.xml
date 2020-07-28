@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.jackey.mapper.BookMapper">
+    <!--    图书类别结果-->
+    <resultMap id="CategoryResult" type="Category">
+        <id property="id" column="cId"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    <resultMap id="BookResult" type="Book">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="uploadUser" column="uploadUser"/>
+        <result property="creatDate" column="creatDate"/>
+        <association property="category" javaType="Category" resultMap="CategoryResult"/>
+    </resultMap>
+    <sql id="selectCommon">
+        select book.*, category.id as cId, name
+        from book
+                 inner join category on categoryId = category.id and book.del_flag=0
+    </sql>
+
+    <!--    查询全部图书信息-->
+    <select id="queryAllBooks" resultMap="BookResult">
+        <include refid="selectCommon"></include>
+        limit #{from},#{pageSize}
+    </select>
+    <!--    按条件查询图书信息-->
+    <select id="queryAllBooksByCondition" resultMap="BookResult">
+        <include refid="selectCommon"></include>
+        <if test="title!=null and title!=''">
+            and title like concat('%',#{title},'%')
+        </if>
+        <if test="categoryId&gt;0">
+            and categoryId=#{categoryId}
+        </if>
+        <if test="creatDate!=null and creatDate!=''">
+            and creatDate=#{creatDate}
+        </if>
+        <if test="uploadUser!=null and uploadUser!=''">
+            and uploadUser=#{uploadUser}
+        </if>
+        limit #{from},#{pageSize}
+    </select>
+<!--    按分类id查询图书信息-->
+    <select id="queryBooksByCategoryId" resultMap="BookResult">
+        <include refid="selectCommon"></include>
+        <if test="categoryId!=null">
+            and categoryId=#{categoryId}
+        </if>
+    </select>
+    <!--    新增图书信息-->
+    <insert id="addBook" parameterType="Book">
+        insert into book (`categoryId`, `title`, `summary`, `uploaduser`, `creatdate`)
+        values (#{category.id}, #{title}, #{summary}, #{uploadUser}, #{creatDate})
+    </insert>
+    <!--    修改图书信息-->
+    <update id="updateBookById" parameterType="Book">
+        update book
+        <set>
+            categoryId=#{category.id},
+            title=#{title},
+            summary=#{summary},
+            uploaduser=#{uploadUser},
+            creatdate=#{creatDate}
+        </set>
+        where id = #{id}
+    </update>
+    <!--    查询图书数量-->
+    <select id="queryBooksCount" resultType="int">
+        select count(1)
+        from book where del_flag=0
+        <if test="title!=null and title!=''">
+            and title like concat('%',#{title},'%')
+        </if>
+        <if test="categoryId&gt;0">
+            and categoryId=#{categoryId}
+        </if>
+        <if test="creatDate!=null and creatDate!=''">
+            and creatDate=#{creatDate}
+        </if>
+        <if test="uploadUser!=null and uploadUser!=''">
+            and uploadUser=#{uploadUser}
+        </if>
+    </select>
+<!--    删除图书信息，逻辑删除-->
+    <update id="deleteBook">
+        update book set del_flag=1 where id=#{id}
+    </update>
+</mapper>
+    

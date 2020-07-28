@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:mvcc="http://www.springframework.org/schema/tool"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd">
+<!--组件扫描：controller-->
+<context:component-scan base-package="com.sec.Conntroller"/>
+
+    <!--mvc注解驱动-->
+    <mvc:annotation-driven/>
+    <!--前端控制器那些不拦截js/css-->
+<!--    <mvc:resources location="/static/" mapping="/static/**" />-->
+    <!--    <mvc:resources location="/WEB-INF/js/" mapping="/js/**" />-->
+    <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/pags/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML" />
+        <property name="cacheable" value="false" />
+        <property name="characterEncoding" value="UTF-8"/><!--不加会乱码-->
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+    </bean>
+
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <!--解决中文乱码-->
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+
+
+    <!--静态资源访问权限-->
+    <mvc:default-servlet-handler />
+    <!--解决中文乱码-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <!-- default StringHttpMessageConverter, solve encoding problem -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+                <property name="writeAcceptCharset" value="false" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+</beans>
