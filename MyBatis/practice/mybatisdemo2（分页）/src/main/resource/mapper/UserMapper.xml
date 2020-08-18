@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--写到层对应的位置-->
+<mapper namespace="com.sec.Mapper.userdao">
+    <!--sql语句抽取-->
+    <sql id="selectUserAll" >select * from userinfo</sql>
+    <!--查询操作-->
+    <select id="findByCondition" parameterType="user" resultType="user" >
+        <!--引入查询sql语句-->
+        <include refid="selectUserAll"/>
+        <where>
+            <if test="user_id!=null and user_id!=''">
+                and user_id=#{user_id}
+            </if>
+            <if test="user_name!=null and user_id!=''">
+                and user_name=#{user_name}
+            </if>
+            <if test="user_age!=null and user_id!=''">
+                and user_age=#{user_age}
+            </if>
+        </where>
+    </select>
+    <select id="findByIds" parameterType="list" resultType="user">
+        <!--引入查询sql语句-->
+        <include refid="selectUserAll"/>
+        <where>
+            <foreach collection="list" open="user_id in (" close=")"  item="item" separator=",">
+                    #{item}
+            </foreach>
+        </where>
+        
+    </select>
+
+    <delete id="deltetAll" parameterType="list">
+        delete  from userinfo
+        <where>
+            <foreach collection="list" open="user_id in (" close=")"  item="item" separator=",">
+            #{item}
+        </foreach>
+        </where>
+    </delete>
+
+    <select id="findAll" parameterType="user" resultType="user">
+        <!--引入查询sql语句-->
+        <include refid="selectUserAll"/>
+    </select>
+<!--    &lt;!&ndash;条件查询操作&ndash;&gt;-->
+<!--    <select id="findId" resultType="user">-->
+<!--        select * from userinfo where user_id=(#{user_id})-->
+<!--    </select>-->
+<!--    &lt;!&ndash;添加&ndash;&gt;-->
+<!--    <insert-->
+<!--            id="saveUser" parameterType="user"-->
+<!--            useGeneratedKeys="true">-->
+<!--        insert into userinfo values (null,#{user_name},#{user_age})-->
+<!--    </insert>-->
+<!--    &lt;!&ndash;修改&ndash;&gt;-->
+<!--    <update id="updateUser" parameterType="user">-->
+<!--        update userinfo set user_name=(#{user_name}),user_age=(#{user_age}) where user_id=(#{user_id})-->
+<!--    </update>-->
+<!--    &lt;!&ndash;删除&ndash;&gt;-->
+<!--    <delete id="delUser" parameterType="int">-->
+<!--        delete from userinfo where user_id=(#{user_id})-->
+<!--    </delete>-->
+</mapper>

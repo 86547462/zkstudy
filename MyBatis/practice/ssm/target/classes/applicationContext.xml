@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--开启组件扫描-->
+    <context:component-scan base-package="com.sec">
+<!--        &lt;!&ndash;排除contrllor的扫描&ndash;&gt;-->
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <!--通过properties标签加载properties文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--配置数据源信息-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--配置sesionfacatty的工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--加载mybatis核心文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+<!--        <property name="typeAliasesPackage" value="com.sec.model"/>-->
+<!--        <property name="mapperLocations" value="classpath:mapper/*.xml"/>-->
+    </bean>
+    <!--加载mapper扫描包-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.sec.Mapper"/>
+    </bean>
+    <!--创建spring的事物管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+<!--    &lt;!&ndash;第七步，声明以注解的方式配置声明式事物&ndash;&gt;-->
+<!--    <tx:annotation-driven transaction-manager="transactionManager"/>-->
+
+    <!--实物增强-->
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--事务的aop植入-->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.sec.service.*.*.*(..))"/>
+    </aop:config>
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--写到层对应的位置-->
+<mapper namespace="com.sec.Mapper.OrderDao">
+    <resultMap id="orderMap" type="order">
+        <!--手动映射关系-->
+        <!--
+        column:数据库字段名
+        property:实体类名
+        -->
+        <id column="order_id" property="order_id"/>
+        <result column="order_time" property="order_time"/>
+        <result column="total" property="total"/>
+        <!--第一种方法-->
+<!--        <result column="user_id" property="user.user_id"/>-->
+<!--        <result column="user_name" property="user.user_name"/>-->
+<!--        <result column="user_age" property="user.user_age"/>-->
+        <!--第二种方法-->
+        <association property="user" javaType="user">
+            <id column="user_id" property="user_id"/>
+            <result column="user_name" property="user_name"/>
+            <result column="user_age" property="user_age"/>
+        </association>
+    </resultMap>
+<select id="selAll" resultMap="orderMap">
+select * from orderinfo o,userinfo u where o.user_id=u.user_id
+</select>
+</mapper>

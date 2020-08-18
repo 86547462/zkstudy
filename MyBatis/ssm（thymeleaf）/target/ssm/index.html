@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Title</title>
+    <meta charset="UTF-8">
+    <script src="static/js/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+            $("#btn").click(function () {
+                alert("asd");
+            })
+        })
+    </script>
+</head>
+<body>
+<h1>添加</h1>
+<form action="/login/saveRedis" method="post">
+    姓名：<input name="user_name"><br>
+    年龄：<input name="user_age"><br>
+    <input type="submit" value="提交">
+</form>
+<a href="login/sel">看thymeleaf</a>
+<br>
+<button id="btn">阿斯顿</button>
+<img src="static/img/9c00045a6891cbcb29433f4ce13f4f11.png" width="100px">
+</body>
+</html>

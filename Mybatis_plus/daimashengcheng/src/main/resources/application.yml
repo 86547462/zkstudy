@@ -1,0 +1,4 @@
+#dev开发环境，test测试环境
+spring:
+  profiles:
+    active: dev
